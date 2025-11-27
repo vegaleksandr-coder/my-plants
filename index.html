@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="База растений">
+    <meta name="theme-color" content="#1e3a8a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>База растений Москвы и МО</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-primary: #2563eb;
+            --color-primary-dark: #1e40af;
+            --color-accent: #dc2626;
+            --color-success: #16a34a;
+            --color-bg: #0f172a;
+            --color-surface: #1e293b;
+            --color-card: #334155;
+            --color-text: #f1f5f9;
+            --color-text-secondary: #cbd5e1;
+            --color-border: #475569;
+            
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 8px 16px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 16px 32px rgba(0, 0, 0, 0.5);
+            
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            
+            --duration-fast: 150ms;
+            --duration-normal: 300ms;
+            --ease: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0f172a 100%);
+            color: var(--color-text);
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(37, 99, 235, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(220, 38, 38, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, #1e40af 100%);
+            border-radius: var(--radius-lg);
+            padding: 40px 30px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        [data-theme="light"] header {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        }
+
+        [data-theme="light"] {
+            --color-bg: #f8fafc;
+            --color-surface: #ffffff;
+            --color-card: #e2e8f0;
+            --color-text: #0f172a;
+            --color-text-secondary: #475569;
+            --color-border: #cbd5e1;
+            --color-primary: #2563eb;
+        }
+
+        [data-theme="light"] body::before {
+            background: radial-gradient(circle at 20% 50%, rgba(37, 99, 235, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(220, 38, 38, 0.08) 0%, transparent 50%);
+        }
+
+        [data-theme="light"] body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 50%, #f8fafc 100%);
+        }
+
+        [data-theme="light"] select,
+        [data-theme="light"] input {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        [data-theme="light"] select:hover,
+        [data-theme="light"] input:hover {
+            background: rgba(37, 99, 235, 0.08);
+        }
+
+        [data-theme="light"] .filters-section {
+            background: #ffffff;
+            border-color: #cbd5e1;
+        }
+
+        [data-theme="light"] .plant-card {
+            background: #ffffff;
+            border-color: #e2e8f0;
+        }
+
+        [data-theme="light"] .modal-content {
+            background: #ffffff;
+        }
+
+        [data-theme="light"] .project-card {
+            background: #ffffff;
+        }
+
+        [data-theme="light"] .modal-gallery-item {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e0e7ff 100%);
+        }
+
+        [data-theme="light"] .care-section {
+            background: rgba(37, 99, 235, 0.08);
+        }
+
+        [data-theme="dark"] {
+            --color-bg: #0f172a;
+            --color-surface: #1e293b;
+            --color-card: #334155;
+            --color-text: #f1f5f9;
+            --color-text-secondary: #cbd5e1;
+            --color-border: #475569;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            z-index: 20;
+        }
+
+        #theme-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--duration-normal) var(--ease);
+            padding: 0;
+        }
+
+        #theme-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.1) rotate(20deg);
+        }
+
+        [data-theme="light"] #theme-btn {
+            background: rgba(0, 0, 0, 0.12);
+            border-color: rgba(0, 0, 0, 0.2);
+            color: #0f172a;
+        }
+
+        header h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        header p {
+            font-size: 14px;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--color-border);
+            padding-bottom: 15px;
+            overflow-x: auto;
+        }
+
+        .tab-button {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            color: var(--color-text-secondary);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            position: relative;
+            transition: all var(--duration-fast) var(--ease);
+            white-space: nowrap;
+            border-radius: var(--radius-md);
+        }
+
+        .tab-button:hover {
+            color: var(--color-text);
+            background: rgba(37, 99, 235, 0.1);
+        }
+
+        .tab-button.active {
+            color: var(--color-primary);
+            background: rgba(37, 99, 235, 0.2);
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -17px;
+            left: 24px;
+            right: 24px;
+            height: 3px;
+            background: var(--color-primary);
+            border-radius: 2px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn var(--duration-normal) var(--ease);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .filters-section {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-md);
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--color-text-secondary);
+        }
+
+        select, input {
+            padding: 12px 16px;
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            color: var(--color-text);
+            font-size: 14px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all var(--duration-fast) var(--ease);
+        }
+
+        select:hover, input:hover {
+            border-color: var(--color-primary);
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            background: rgba(37, 99, 235, 0.1);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            grid-column: 1 / -1;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all var(--duration-fast) var(--ease);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-primary) 0%, #1e40af 100%);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--color-card);
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--color-primary);
+            background: rgba(37, 99, 235, 0.1);
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .results-header h2 {
+            font-size: 20px;
+            margin: 0;
+        }
+
+        .sort-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sort-control label {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
+
+        .sort-control select {
+            min-width: 180px;
+        }
+
+        .plants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .plant-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-md);
+            transition: all var(--duration-normal) var(--ease);
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .plant-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-lg), 0 0 20px rgba(37, 99, 235, 0.3);
+        }
+
+        .plant-image {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        [data-theme="light"] .plant-image {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e0e7ff 100%);
+        }
+
+        .plant-image-placeholder {
+            font-size: 80px;
+            opacity: 0.8;
+        }
+
+        .favorite-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(30, 41, 59, 0.9);
+            backdrop-filter: blur(10px);
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            transition: all var(--duration-fast) var(--ease);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .favorite-btn:hover {
+            background: rgba(220, 38, 38, 0.3);
+            transform: scale(1.15);
+        }
+
+        .relevance-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .plant-content {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .plant-name {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--color-text);
+        }
+
+        .plant-scientific {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            font-style: italic;
+            margin-bottom: 12px;
+        }
+
+        .plant-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .meta-tag {
+            background: rgba(37, 99, 235, 0.15);
+            padding: 5px 10px;
+            border-radius: 12px;
+            color: var(--color-text-secondary);
+            font-size: 12px;
+            border: 1px solid rgba(37, 99, 235, 0.3);
+        }
+
+        .plant-description {
+            font-size: 13px;
+            color: var(--color-text-secondary);
+            line-height: 1.5;
+            margin-bottom: 15px;
+            flex: 1;
+        }
+
+        .plant-button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--color-primary) 0%, #1e40af 100%);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all var(--duration-fast) var(--ease);
+        }
+
+        .plant-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+            animation: fadeIn var(--duration-fast) var(--ease);
+        }
+
+        #plant-modal {
+            z-index: 2000;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            border: 1px solid var(--color-border);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--color-card);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            color: var(--color-text);
+            transition: all var(--duration-fast) var(--ease);
+            border: 1px solid var(--color-border);
+        }
+
+        .modal-close:hover {
+            background: var(--color-accent);
+            border-color: var(--color-accent);
+            transform: rotate(90deg);
+        }
+
+        .modal-gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 25px;
+            max-height: 400px;
+            overflow: hidden;
+            border-radius: var(--radius-lg);
+        }
+
+        .modal-gallery-item {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-md);
+            color: var(--color-text-secondary);
+            font-size: 50px;
+            border: 1px solid var(--color-border);
+        }
+
+        .modal-header {
+            padding: 30px 30px 0;
+        }
+
+        .modal-body {
+            padding: 0 30px 30px;
+        }
+
+        .detail-section {
+            margin-bottom: 25px;
+        }
+
+        .detail-section h3 {
+            margin-bottom: 15px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--color-primary);
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--color-border);
+            font-size: 14px;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-row strong {
+            color: var(--color-text);
+            min-width: 40%;
+        }
+
+        .detail-row span {
+            color: var(--color-text-secondary);
+            text-align: right;
+            flex: 1;
+        }
+
+        .detail-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--color-text-secondary);
+            margin: 0;
+        }
+
+        .care-section {
+            background: rgba(37, 99, 235, 0.1);
+            padding: 16px;
+            border-radius: var(--radius-md);
+            margin-bottom: 12px;
+            border-left: 3px solid var(--color-primary);
+        }
+
+        .care-section h4 {
+            margin: 0 0 8px 0;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .care-section p {
+            margin: 0;
+            font-size: 13px;
+            color: var(--color-text-secondary);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+            padding: 14px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 30px;
+            color: var(--color-text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+            opacity: 0.6;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            margin: 0;
+        }
+
+        .projects-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .project-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: 25px;
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-md);
+            cursor: pointer;
+            transition: all var(--duration-normal) var(--ease);
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--color-success);
+            box-shadow: var(--shadow-lg), 0 0 20px rgba(22, 163, 74, 0.2);
+        }
+
+        .project-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--color-text);
+        }
+
+        .project-count {
+            font-size: 13px;
+            color: var(--color-text-secondary);
+            margin-bottom: 15px;
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .project-actions button {
+            flex: 1;
+            padding: 10px 16px;
+            font-size: 12px;
+        }
+
+        .project-plants-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .project-plant-item {
+            padding: 15px;
+            border-bottom: 1px solid var(--color-border);
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background var(--duration-fast) var(--ease);
+            cursor: pointer;
+        }
+
+        .project-plant-item:hover {
+            background: rgba(37, 99, 235, 0.1);
+        }
+
+        .project-plant-item:last-child {
+            border-bottom: none;
+        }
+
+        .project-plant-name {
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .project-plant-type {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
+
+        .remove-plant-btn {
+            background: rgba(220, 38, 38, 0.2);
+            color: #fca5a5;
+            border: 1px solid rgba(220, 38, 38, 0.4);
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 12px;
+            transition: all var(--duration-fast) var(--ease);
+        }
+
+        .remove-plant-btn:hover {
+            background: rgba(220, 38, 38, 0.3);
+            border-color: var(--color-accent);
+        }
+
+        .confirm-dialog {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 400px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--color-border);
+            position: relative;
+            z-index: 1001;
+            animation: slideUp var(--duration-normal) var(--ease);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .confirm-header {
+            padding: 25px 25px 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .confirm-header h3 {
+            color: var(--color-text);
+            margin: 0;
+        }
+
+        .confirm-body {
+            padding: 25px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .confirm-actions {
+            display: flex;
+            gap: 12px;
+            padding: 0 25px 25px;
+            justify-content: flex-end;
+        }
+
+        .confirm-actions button {
+            padding: 10px 20px;
+            min-width: 100px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 15px; }
+            header { padding: 30px 20px; }
+            header h1 { font-size: 24px; }
+            .filters-grid { grid-template-columns: 1fr; }
+            .plants-grid { grid-template-columns: 1fr; gap: 15px; }
+            .projects-list { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="theme-toggle">
+                <button id="theme-btn" onclick="toggleTheme()" title="Переключить тему">
+                    <span class="theme-icon">🌙</span>
+                </button>
+            </div>
+            <h1>🌿 База растений Москвы и МО</h1>
+            <p>Подбор декоративных и съедобных растений для открытого грунта</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('search')">🔍 Поиск</button>
+            <button class="tab-button" onclick="switchTab('favorites')">❤️ Избранное</button>
+            <button class="tab-button" onclick="switchTab('projects')">📋 Проекты</button>
+        </div>
+
+        <div id="search" class="tab-content active">
+            <div class="filters-section">
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label for="zone">Климатическая зона</label>
+                        <select id="zone">
+                            <option value="">Выберите зону</option>
+                            <option value="kolesniv_3">Колесников 3 (Москва, МО)</option>
+                            <option value="kolesniv_2">Колесников 2</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="soil">Тип почвы</label>
+                        <select id="soil">
+                            <option value="">Выберите тип</option>
+                            <option value="суглинок">Суглинок</option>
+                            <option value="песчаная">Песчаная</option>
+                            <option value="супесчаная">Супесчаная</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="light">Уровень освещенности</label>
+                        <select id="light">
+                            <option value="">Выберите уровень</option>
+                            <option value="полное_солнце">Полное солнце (6+ часов)</option>
+                            <option value="полутень">Полутень (3-6 часов)</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="purpose">Цель посадки</label>
+                        <select id="purpose">
+                            <option value="">Выберите цель</option>
+                            <option value="съедобный_сад">Съедобный сад</option>
+                            <option value="декоративная_клумба">Декоративная клумба</option>
+                        </select>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn-primary" onclick="filterPlants()">Применить фильтры</button>
+                        <button class="btn-secondary" onclick="resetFilters()">Сброс</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-header">
+                <h2 id="results-count">Результаты поиска</h2>
+            </div>
+
+            <div class="plants-grid" id="plants-container"></div>
+        </div>
+
+        <div id="favorites" class="tab-content">
+            <div class="plants-grid" id="favorites-container"></div>
+        </div>
+
+        <div id="projects" class="tab-content">
+            <div style="margin-bottom: 30px;">
+                <button class="btn-primary" onclick="createNewProject()" style="padding: 14px 28px;">+ Новый проект</button>
+            </div>
+            <div class="projects-list" id="projects-container"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="plant-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div class="modal-header">
+                <div class="modal-gallery" id="modal-gallery"></div>
+                <h2 id="modal-title" style="margin: 0 0 8px 0; font-size: 24px;"></h2>
+            </div>
+            <div class="modal-body">
+                <div class="modal-actions">
+                    <button class="btn-primary" onclick="toggleFavorite(currentPlant.id)"><span id="fav-btn-text">❤️ В избранное</span></button>
+                </div>
+                <div class="detail-section">
+                    <h3>Характеристики</h3>
+                    <div id="modal-characteristics"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="view-project-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeViewProject()">&times;</button>
+            <div class="modal-header">
+                <h2 id="view-project-title" style="margin: 0; font-size: 20px;"></h2>
+            </div>
+            <div class="modal-body">
+                <div class="project-plants-list" id="view-project-plants"></div>
+                <button class="btn-secondary" style="width: 100%; padding: 12px;" onclick="closeViewProject()">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="confirm-modal">
+        <div class="confirm-dialog">
+            <div class="confirm-header">
+                <h3>Подтверждение</h3>
+            </div>
+            <div class="confirm-body">
+                <p id="confirm-message" style="margin: 0; font-size: 16px; color: var(--color-text); text-align: center;"></p>
+            </div>
+            <div class="confirm-actions">
+                <button class="btn-secondary" onclick="closeConfirmDialog()">Отмена</button>
+                <button class="btn-primary" onclick="confirmAction()">Удалить</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const plantsDatabase = [
+            { id: 1, nameRU: "Яблоня домашняя", nameLAT: "Malus domestica", type: "Дерево", foliage: "Лиственное", height: "высокие (более 2,5 м)", zone: "kolesniv_3", soil: ["суглинок", "супесчаная"], light: "полное_солнце", purpose: ["съедобный_сад"], relevance: 95, description: "Классовая плодовая культура для средней полосы.", images: ["🍎", "🌸", "🍃", "❄️"] },
+            { id: 2, nameRU: "Лаванда узколистная", nameLAT: "Lavandula angustifolia", type: "Многолетник", foliage: "Вечнозеленое", height: "низкие (до 1 м)", zone: "kolesniv_3", soil: ["супесчаная", "песчаная"], light: "полное_солнце", purpose: ["декоративная_клумба"], relevance: 90, description: "Ароматный кустарничек с фиолетовыми соцветиями.", images: ["💜", "🌼", "🍃", "❄️"] },
+            { id: 3, nameRU: "Ель обыкновенная", nameLAT: "Picea abies", type: "Дерево", foliage: "Хвойное", height: "высокие (более 2,5 м)", zone: "kolesniv_3", soil: ["суглинок"], light: "полное_солнце", purpose: ["декоративная_клумба"], relevance: 85, description: "Вечнозеленая хвойная культура.", images: ["🌲", "🌲", "⛄", "🌲"] },
+            { id: 4, nameRU: "Помидор обыкновенный", nameLAT: "Solanum lycopersicum", type: "Однолетник", foliage: "Лиственное", height: "средние (1-2,5 м)", zone: "kolesniv_3", soil: ["суглинок"], light: "полное_солнце", purpose: ["съедобный_сад"], relevance: 92, description: "Универсальная овощная культура.", images: ["🍅", "🌸", "🌿", "🍅"] },
+            { id: 5, nameRU: "Роза парковая", nameLAT: "Rosa rugosa", type: "Кустарник", foliage: "Лиственное", height: "средние (1-2,5 м)", zone: "kolesniv_3", soil: ["суглинок"], light: "полное_солнце", purpose: ["декоративная_клумба"], relevance: 89, description: "Морозостойкая роза с крупными ароматными цветками.", images: ["🌹", "🌺", "🍂", "🌹"] }
+        ];
+
+        let filteredPlants = [...plantsDatabase];
+        let currentPlant = null;
+
+        function loadData() {
+            const saved = localStorage.getItem('plantAppData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                window.favorites = data.favorites || [];
+                window.projects = data.projects || [];
+            } else {
+                window.favorites = [];
+                window.projects = [];
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('plantAppData', JSON.stringify({ favorites: window.favorites, projects: window.projects }));
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+            event.target.classList.add('active');
+            if (tab === 'favorites') renderFavorites();
+            if (tab === 'projects') renderProjects();
+        }
+
+        function filterPlants() {
+            const zone = document.getElementById('zone').value;
+            const soil = document.getElementById('soil').value;
+            const light = document.getElementById('light').value;
+            const purpose = document.getElementById('purpose').value;
+
+            filteredPlants = plantsDatabase.filter(plant => {
+                let matches = true;
+                if (zone && plant.zone !== zone) matches = false;
+                if (soil && !plant.soil.includes(soil)) matches = false;
+                if (light && plant.light !== light) matches = false;
+                if (purpose && !plant.purpose.includes(purpose)) matches = false;
+                return matches;
+            });
+
+            renderPlants();
+            updateResultsCount();
+        }
+
+        function renderPlants() {
+            const container = document.getElementById('plants-container');
+            container.innerHTML = '';
+
+            if (filteredPlants.length === 0) {
+                container.innerHTML = `<div style="grid-column: 1/-1;"><div class="empty-state"><div class="empty-state-icon">🔍</div><p>По выбранным критериям растений не найдено</p></div></div>`;
+                return;
+            }
+
+            filteredPlants.forEach(plant => {
+                const isFavorite = window.favorites.includes(plant.id);
+                const card = document.createElement('div');
+                card.className = 'plant-card';
+                card.innerHTML = `
+                    <div class="plant-image">
+                        <div class="plant-image-placeholder">${plant.images[0]}</div>
+                        <button class="favorite-btn" onclick="toggleFavorite(${plant.id}, event)">${isFavorite ? '❤️' : '🤍'}</button>
+                    </div>
+                    <div class="plant-content">
+                        <h3 class="plant-name">${plant.nameRU}</h3>
+                        <p class="plant-scientific">${plant.nameLAT}</p>
+                        <p class="plant-description">${plant.description}</p>
+                        <button class="plant-button" onclick="openModal(${plant.id})">Подробнее</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderFavorites() {
+            const container = document.getElementById('favorites-container');
+            const favPlants = plantsDatabase.filter(p => window.favorites.includes(p.id));
+            if (favPlants.length === 0) {
+                container.innerHTML = `<div style="grid-column: 1/-1;"><div class="empty-state"><div class="empty-state-icon">💔</div><p>Избранное пусто</p></div></div>`;
+                return;
+            }
+            container.innerHTML = '';
+            favPlants.forEach(plant => {
+                const card = document.createElement('div');
+                card.className = 'plant-card';
+                card.innerHTML = `
+                    <div class="plant-image">
+                        <div class="plant-image-placeholder">${plant.images[0]}</div>
+                        <button class="favorite-btn" onclick="toggleFavorite(${plant.id}, event)">❤️</button>
+                    </div>
+                    <div class="plant-content">
+                        <h3 class="plant-name">${plant.nameRU}</h3>
+                        <p class="plant-scientific">${plant.nameLAT}</p>
+                        <p class="plant-description">${plant.description}</p>
+                        <button class="plant-button" onclick="openModal(${plant.id})">Подробнее</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderProjects() {
+            const container = document.getElementById('projects-container');
+            if (window.projects.length === 0) {
+                container.innerHTML = `<div style="grid-column: 1/-1;"><div class="empty-state"><div class="empty-state-icon">📋</div><p>Проектов пока нет</p></div></div>`;
+                return;
+            }
+            container.innerHTML = '';
+            window.projects.forEach((project, idx) => {
+                const card = document.createElement('div');
+                card.className = 'project-card';
+                card.innerHTML = `
+                    <h3 class="project-name">${project.name}</h3>
+                    <p class="project-count">Растений: ${project.plants.length}</p>
+                    <div class="project-actions">
+                        <button class="btn-primary" onclick="viewProject(${idx})">Открыть</button>
+                        <button class="btn-secondary" onclick="deleteProject(${idx})">Удалить</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function createNewProject() {
+            const name = prompt('Введите название проекта:');
+            if (name) {
+                window.projects.push({ name, plants: [] });
+                saveData();
+                renderProjects();
+            }
+        }
+
+        function viewProject(idx) {
+            const project = window.projects[idx];
+            document.getElementById('view-project-title').textContent = project.name;
+            const plantsList = document.getElementById('view-project-plants');
+            if (project.plants.length === 0) {
+                plantsList.innerHTML = '<div class="empty-state"><p>Растений нет</p></div>';
+            } else {
+                plantsList.innerHTML = '';
+                project.plants.forEach((plantId, plantIdx) => {
+                    const plant = plantsDatabase.find(p => p.id === plantId);
+                    if (plant) {
+                        const item = document.createElement('div');
+                        item.className = 'project-plant-item';
+                        item.innerHTML = `
+                            <div onclick="openModal(${plant.id})">
+                                <div class="project-plant-name">${plant.nameRU}</div>
+                                <div class="project-plant-type">${plant.type}</div>
+                            </div>
+                            <button class="remove-plant-btn" onclick="removeFromProject(${idx}, ${plantIdx}, event)">Удалить</button>
+                        `;
+                        plantsList.appendChild(item);
+                    }
+                });
+            }
+            document.getElementById('view-project-modal').classList.add('active');
+        }
+
+        function removeFromProject(projIdx, plantIdx, event) {
+            if (event) event.stopPropagation();
+            showConfirmDialog('Удалить растение из проекта?', () => {
+                window.projects[projIdx].plants.splice(plantIdx, 1);
+                saveData();
+                viewProject(projIdx);
+                renderProjects();
+                closeConfirmDialog();
+            });
+        }
+
+        function closeViewProject() {
+            document.getElementById('view-project-modal').classList.remove('active');
+        }
+
+        function deleteProject(idx) {
+            showConfirmDialog('Удалить проект?', () => {
+                window.projects.splice(idx, 1);
+                saveData();
+                renderProjects();
+                closeConfirmDialog();
+            });
+        }
+
+        function showConfirmDialog(message, onConfirm) {
+            window.pendingConfirmAction = onConfirm;
+            document.getElementById('confirm-message').textContent = message;
+            document.getElementById('confirm-modal').classList.add('active');
+        }
+
+        function closeConfirmDialog() {
+            document.getElementById('confirm-modal').classList.remove('active');
+            window.pendingConfirmAction = null;
+        }
+
+        function confirmAction() {
+            if (window.pendingConfirmAction) window.pendingConfirmAction();
+        }
+
+        function toggleFavorite(plantId, event) {
+            if (event) event.stopPropagation();
+            const idx = window.favorites.indexOf(plantId);
+            if (idx > -1) {
+                window.favorites.splice(idx, 1);
+            } else {
+                window.favorites.push(plantId);
+            }
+            saveData();
+            if (currentPlant?.id === plantId) {
+                document.getElementById('fav-btn-text').textContent = idx > -1 ? '❤️ В избранное' : '❌ Из избранного';
+            }
+            renderPlants();
+        }
+
+        function openModal(plantId) {
+            currentPlant = plantsDatabase.find(p => p.id === plantId);
+            const isFav = window.favorites.includes(plantId);
+            document.getElementById('modal-title').textContent = currentPlant.nameRU;
+            document.getElementById('fav-btn-text').textContent = isFav ? '❌ Из избранного' : '❤️ В избранное';
+            document.getElementById('modal-gallery').innerHTML = currentPlant.images.map(img => `<div class="modal-gallery-item">${img}</div>`).join('');
+            document.getElementById('modal-characteristics').innerHTML = `
+                <div class="detail-row"><strong>Тип:</strong><span>${currentPlant.type}</span></div>
+                <div class="detail-row"><strong>Листва:</strong><span>${currentPlant.foliage}</span></div>
+                <div class="detail-row"><strong>Описание:</strong><span>${currentPlant.description}</span></div>
+            `;
+            document.getElementById('plant-modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('plant-modal').classList.remove('active');
+        }
+
+        function resetFilters() {
+            document.getElementById('zone').value = '';
+            document.getElementById('soil').value = '';
+            document.getElementById('light').value = '';
+            document.getElementById('purpose').value = '';
+            filteredPlants = [...plantsDatabase];
+            renderPlants();
+            updateResultsCount();
+        }
+
+        function updateResultsCount() {
+            const count = filteredPlants.length;
+            document.getElementById('results-count').textContent = `Результаты: ${count} растени${count % 10 === 1 && count % 100 !== 11 ? 'е' : 'й'}`;
+        }
+
+        loadData();
+        renderPlants();
+        updateResultsCount();
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            const icon = document.querySelector('.theme-icon');
+            icon.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            const icon = document.querySelector('.theme-icon');
+            icon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+        }
+
+        initTheme();
+
+        document.getElementById('plant-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+        document.getElementById('view-project-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeViewProject();
+        });
+        document.getElementById('confirm-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeConfirmDialog();
+        });
+    </script>
+</body>
+</html>
