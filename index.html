@@ -71,6 +71,39 @@
             font-size: 14px;
         }
 
+        .tabs {
+            display: flex;
+            gap: var(--space-12);
+            margin-bottom: var(--space-24);
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: var(--space-12);
+        }
+
+        .tab-button {
+            padding: var(--space-12) var(--space-16);
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--color-text-light);
+            transition: all var(--duration-normal);
+        }
+
+        .tab-button.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
         .filters-section {
             background: var(--color-surface);
             padding: var(--space-20);
@@ -196,6 +229,7 @@
             border: 1px solid var(--color-border);
             transition: all var(--duration-normal);
             cursor: pointer;
+            position: relative;
         }
 
         .plant-card:hover {
@@ -234,10 +268,33 @@
             color: #999;
         }
 
-        .relevance-badge {
+        .favorite-btn {
             position: absolute;
             top: var(--space-12);
             right: var(--space-12);
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            transition: all var(--duration-normal);
+        }
+
+        .favorite-btn:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+
+        .relevance-badge {
+            position: absolute;
+            top: var(--space-12);
+            left: var(--space-12);
             background: var(--color-accent);
             color: white;
             padding: var(--space-8) var(--space-12);
@@ -447,6 +504,16 @@
             color: var(--color-text-light);
         }
 
+        .modal-actions {
+            display: flex;
+            gap: var(--space-12);
+            margin-bottom: var(--space-24);
+        }
+
+        .modal-actions button {
+            flex: 1;
+        }
+
         .empty-state {
             text-align: center;
             padding: var(--space-24);
@@ -459,460 +526,75 @@
             opacity: 0.5;
         }
 
-        @media (max-width: 1024px) {
-            .container {
-                padding: var(--space-16);
-            }
+        .projects-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: var(--space-20);
+        }
 
-            .filters-grid {
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            }
+        .project-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: var(--space-20);
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            transition: all var(--duration-normal);
+        }
 
-            .plants-grid {
-                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            }
+        .project-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .project-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0 0 var(--space-8) 0;
+            color: var(--color-text);
+        }
+
+        .project-count {
+            font-size: 13px;
+            color: var(--color-text-light);
+            margin-bottom: var(--space-12);
+        }
+
+        .project-actions {
+            display: flex;
+            gap: var(--space-8);
+        }
+
+        .project-actions button {
+            flex: 1;
+            padding: var(--space-8) var(--space-12);
+            font-size: 12px;
         }
 
         @media (max-width: 768px) {
-            :root {
-                --space-8: 6px;
-                --space-12: 10px;
-                --space-16: 14px;
-                --space-20: 16px;
-                --space-24: 18px;
-            }
-
-            body {
-                font-size: 14px;
-            }
-
             .container {
                 padding: var(--space-12);
-                max-width: 100%;
-            }
-
-            header {
-                padding: var(--space-16) var(--space-12);
-                margin-bottom: var(--space-16);
-                border-radius: var(--radius-base);
             }
 
             header h1 {
                 font-size: 20px;
-                margin-bottom: var(--space-4);
             }
 
-            header p {
+            .tabs {
+                gap: var(--space-8);
+            }
+
+            .tab-button {
+                padding: var(--space-8) var(--space-12);
                 font-size: 12px;
-            }
-
-            .filters-section {
-                padding: var(--space-16);
-                margin-bottom: var(--space-16);
-            }
-
-            .filters-grid {
-                grid-template-columns: 1fr;
-                gap: var(--space-12);
-            }
-
-            .filter-group label {
-                font-size: 12px;
-            }
-
-            select, input {
-                padding: var(--space-10);
-                font-size: 13px;
-            }
-
-            .button-group {
-                flex-direction: column;
-                gap: var(--space-10);
-            }
-
-            .button-group button {
-                width: 100%;
-                padding: var(--space-10);
-                font-size: 13px;
-            }
-
-            .results-header {
-                margin-bottom: var(--space-16);
-                flex-direction: column;
-                gap: var(--space-12);
-                align-items: flex-start;
-            }
-
-            .results-header h2 {
-                font-size: 16px;
-                margin: 0;
-            }
-
-            .sort-control {
-                width: 100%;
-            }
-
-            .sort-control select {
-                width: 100%;
-                min-width: auto;
             }
 
             .plants-grid {
                 grid-template-columns: 1fr;
-                gap: var(--space-16);
-                margin-bottom: var(--space-16);
             }
 
-            .plant-card {
-                border-radius: var(--radius-base);
-            }
-
-            .plant-image {
-                height: 160px;
-            }
-
-            .plant-content {
-                padding: var(--space-12);
-            }
-
-            .plant-name {
-                font-size: 14px;
-            }
-
-            .plant-scientific {
-                font-size: 11px;
-            }
-
-            .plant-meta {
-                gap: var(--space-6);
-                margin-bottom: var(--space-10);
-            }
-
-            .meta-tag {
-                font-size: 11px;
-                padding: var(--space-4) var(--space-6);
-            }
-
-            .plant-description {
-                font-size: 12px;
-                line-height: 1.3;
-            }
-
-            .plant-button {
-                padding: var(--space-10);
-                font-size: 12px;
-            }
-
-            .modal-content {
-                max-width: 100%;
-                width: 95%;
-                max-height: 95vh;
-                border-radius: var(--radius-base);
-            }
-
-            .modal-gallery {
+            .projects-list {
                 grid-template-columns: 1fr;
-                gap: var(--space-6);
-                margin-bottom: var(--space-16);
-                max-height: 300px;
-            }
-
-            .modal-gallery-item {
-                min-height: 120px;
-                font-size: 11px;
-            }
-
-            .modal-header {
-                padding: var(--space-16);
-            }
-
-            .modal-body {
-                padding: 0 var(--space-16) var(--space-16);
-            }
-
-            .modal-close {
-                width: 28px;
-                height: 28px;
-                font-size: 18px;
-                top: var(--space-12);
-                right: var(--space-12);
-            }
-
-            .detail-section {
-                margin-bottom: var(--space-16);
-            }
-
-            .detail-section h3 {
-                font-size: 12px;
-                margin-bottom: var(--space-10);
-            }
-
-            .detail-row {
-                padding: var(--space-10) 0;
-                font-size: 13px;
-            }
-
-            .detail-text {
-                font-size: 13px;
-                line-height: 1.5;
-            }
-
-            .care-section {
-                padding: var(--space-12);
-                margin-bottom: var(--space-10);
-            }
-
-            .care-section h4 {
-                font-size: 12px;
-                margin-bottom: var(--space-6);
-            }
-
-            .care-section p {
-                font-size: 12px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            :root {
-                --space-8: 5px;
-                --space-12: 8px;
-                --space-16: 12px;
-                --space-20: 14px;
-                --space-24: 16px;
-            }
-
-            body {
-                font-size: 13px;
-            }
-
-            .container {
-                padding: var(--space-8);
-            }
-
-            header {
-                padding: var(--space-12) var(--space-8);
-            }
-
-            header h1 {
-                font-size: 18px;
-            }
-
-            header p {
-                font-size: 11px;
-            }
-
-            .filters-section {
-                padding: var(--space-12);
-                margin-bottom: var(--space-12);
-            }
-
-            .filters-grid {
-                gap: var(--space-8);
-            }
-
-            .filter-group label {
-                font-size: 11px;
-                margin-bottom: var(--space-6);
-            }
-
-            select, input {
-                padding: var(--space-8);
-                font-size: 12px;
-                -webkit-appearance: none;
-                -moz-appearance: none;
-                appearance: none;
-            }
-
-            .button-group {
-                gap: var(--space-8);
-            }
-
-            .button-group button {
-                padding: var(--space-8);
-                font-size: 12px;
-            }
-
-            .results-header {
-                margin-bottom: var(--space-12);
-                gap: var(--space-8);
-            }
-
-            .results-header h2 {
-                font-size: 14px;
-            }
-
-            .sort-control {
-                gap: var(--space-6);
-            }
-
-            .sort-control label {
-                font-size: 12px;
-            }
-
-            .sort-control select {
-                font-size: 12px;
-            }
-
-            .plants-grid {
-                gap: var(--space-12);
-            }
-
-            .plant-image {
-                height: 140px;
-            }
-
-            .plant-content {
-                padding: var(--space-10);
-            }
-
-            .plant-name {
-                font-size: 13px;
-                margin-bottom: var(--space-2);
-            }
-
-            .plant-scientific {
-                font-size: 10px;
-                margin-bottom: var(--space-8);
-            }
-
-            .plant-meta {
-                gap: var(--space-4);
-                margin-bottom: var(--space-8);
-            }
-
-            .meta-tag {
-                font-size: 10px;
-                padding: var(--space-3) var(--space-5);
-            }
-
-            .plant-description {
-                font-size: 11px;
-                margin-bottom: var(--space-8);
-            }
-
-            .plant-button {
-                padding: var(--space-8);
-                font-size: 11px;
-            }
-
-            .modal-content {
-                width: 98%;
-                max-height: 98vh;
-            }
-
-            .modal-gallery {
-                margin-bottom: var(--space-12);
-                max-height: 280px;
-            }
-
-            .modal-gallery-item {
-                min-height: 100px;
-            }
-
-            .modal-header {
-                padding: var(--space-12);
-            }
-
-            .modal-body {
-                padding: 0 var(--space-12) var(--space-12);
-            }
-
-            .modal-close {
-                width: 24px;
-                height: 24px;
-                font-size: 16px;
-                top: var(--space-8);
-                right: var(--space-8);
-            }
-
-            .detail-section {
-                margin-bottom: var(--space-12);
-            }
-
-            .detail-section h3 {
-                font-size: 11px;
-                margin-bottom: var(--space-8);
-            }
-
-            .detail-row {
-                padding: var(--space-8) 0;
-                font-size: 12px;
-            }
-
-            .detail-row strong {
-                min-width: 50%;
-            }
-
-            .detail-text {
-                font-size: 12px;
-            }
-
-            .care-section {
-                padding: var(--space-10);
-                margin-bottom: var(--space-8);
-            }
-
-            .care-section h4 {
-                font-size: 11px;
-                margin-bottom: var(--space-4);
-            }
-
-            .care-section p {
-                font-size: 11px;
-            }
-
-            .empty-state {
-                padding: var(--space-16);
-            }
-
-            .empty-state-icon {
-                font-size: 36px;
-                margin-bottom: var(--space-8);
-            }
-        }
-
-        /* iPhone notch support */
-        @supports (padding: max(0px)) {
-            body {
-                padding-left: max(0px, env(safe-area-inset-left));
-                padding-right: max(0px, env(safe-area-inset-right));
-                padding-top: max(0px, env(safe-area-inset-top));
-                padding-bottom: max(0px, env(safe-area-inset-bottom));
-            }
-
-            .modal {
-                padding-top: max(var(--space-20), env(safe-area-inset-top));
-                padding-bottom: max(var(--space-20), env(safe-area-inset-bottom));
-            }
-        }
-
-        /* Touch-friendly UI for mobile */
-        @media (hover: none) and (pointer: coarse) {
-            button, select {
-                min-height: 44px;
-                min-width: 44px;
-                -webkit-tap-highlight-color: transparent;
-            }
-
-            .plant-card {
-                border-radius: var(--radius-base);
-            }
-
-            .modal-close {
-                min-width: 44px;
-                min-height: 44px;
-            }
-
-            a, button {
-                -webkit-user-select: none;
-                user-select: none;
-            }
-        }
-
-        /* Prevent zoom on input focus */
-        @media (max-width: 768px) {
-            select, input {
-                font-size: 16px;
             }
         }
     </style>
@@ -924,74 +606,97 @@
             <p>Подбор декоративных и съедобных растений для открытого грунта</p>
         </header>
 
-        <div class="filters-section">
-            <div class="filters-grid">
-                <div class="filter-group">
-                    <label for="zone">Климатическая зона</label>
-                    <select id="zone">
-                        <option value="">Выберите зону</option>
-                        <option value="kolesniv_3">Колесников 3 (Москва, МО)</option>
-                        <option value="kolesniv_2">Колесников 2</option>
-                        <option value="usda_4">USDA 4</option>
-                        <option value="usda_5">USDA 5</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label for="soil">Тип почвы</label>
-                    <select id="soil">
-                        <option value="">Выберите тип</option>
-                        <option value="суглинок">Суглинок</option>
-                        <option value="глина">Глина</option>
-                        <option value="песчаная">Песчаная</option>
-                        <option value="супесчаная">Супесчаная</option>
-                        <option value="торфяная">Торфяная</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label for="light">Уровень освещенности</label>
-                    <select id="light">
-                        <option value="">Выберите уровень</option>
-                        <option value="полное_солнце">Полное солнце (6+ часов)</option>
-                        <option value="полутень">Полутень (3-6 часов)</option>
-                        <option value="тень">Тень (менее 3 часов)</option>
-                        <option value="рассеянный_свет">Рассеянный свет</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label for="purpose">Цель посадки</label>
-                    <select id="purpose">
-                        <option value="">Выберите цель</option>
-                        <option value="съедобный_сад">Съедобный сад</option>
-                        <option value="декоративная_клумба">Декоративная клумба</option>
-                        <option value="опылители">Привлечение опылителей</option>
-                    </select>
-                </div>
-
-                <div class="button-group">
-                    <button class="btn-primary" onclick="filterPlants()">Применить фильтры</button>
-                    <button class="btn-secondary" onclick="resetFilters()">Сброс</button>
-                </div>
-            </div>
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('search')">🔍 Поиск</button>
+            <button class="tab-button" onclick="switchTab('favorites')">❤️ Избранное</button>
+            <button class="tab-button" onclick="switchTab('projects')">📋 Мои проекты</button>
         </div>
 
-        <div class="results-header">
-            <h2 id="results-count">Результаты поиска</h2>
-            <div class="sort-control">
-                <label for="sort">Сортировка:</label>
-                <select id="sort" onchange="filterPlants()">
-                    <option value="relevance">По релевантности</option>
-                    <option value="name">По названию</option>
-                    <option value="height">По высоте</option>
-                </select>
+        <!-- ========== ПОИСК И ФИЛЬТРЫ ========== -->
+        <div id="search" class="tab-content active">
+            <div class="filters-section">
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label for="zone">Климатическая зона</label>
+                        <select id="zone">
+                            <option value="">Выберите зону</option>
+                            <option value="kolesniv_3">Колесников 3 (Москва, МО)</option>
+                            <option value="kolesniv_2">Колесников 2</option>
+                            <option value="usda_4">USDA 4</option>
+                            <option value="usda_5">USDA 5</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="soil">Тип почвы</label>
+                        <select id="soil">
+                            <option value="">Выберите тип</option>
+                            <option value="суглинок">Суглинок</option>
+                            <option value="глина">Глина</option>
+                            <option value="песчаная">Песчаная</option>
+                            <option value="супесчаная">Супесчаная</option>
+                            <option value="торфяная">Торфяная</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="light">Уровень освещенности</label>
+                        <select id="light">
+                            <option value="">Выберите уровень</option>
+                            <option value="полное_солнце">Полное солнце (6+ часов)</option>
+                            <option value="полутень">Полутень (3-6 часов)</option>
+                            <option value="тень">Тень (менее 3 часов)</option>
+                            <option value="рассеянный_свет">Рассеянный свет</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="purpose">Цель посадки</label>
+                        <select id="purpose">
+                            <option value="">Выберите цель</option>
+                            <option value="съедобный_сад">Съедобный сад</option>
+                            <option value="декоративная_клумба">Декоративная клумба</option>
+                            <option value="опылители">Привлечение опылителей</option>
+                        </select>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn-primary" onclick="filterPlants()">Применить фильтры</button>
+                        <button class="btn-secondary" onclick="resetFilters()">Сброс</button>
+                    </div>
+                </div>
             </div>
+
+            <div class="results-header">
+                <h2 id="results-count">Результаты поиска</h2>
+                <div class="sort-control">
+                    <label for="sort">Сортировка:</label>
+                    <select id="sort" onchange="filterPlants()">
+                        <option value="relevance">По релевантности</option>
+                        <option value="name">По названию</option>
+                        <option value="height">По высоте</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="plants-grid" id="plants-container"></div>
         </div>
 
-        <div class="plants-grid" id="plants-container"></div>
+        <!-- ========== ИЗБРАННОЕ ========== -->
+        <div id="favorites" class="tab-content">
+            <div class="plants-grid" id="favorites-container"></div>
+        </div>
+
+        <!-- ========== ПРОЕКТЫ ========== -->
+        <div id="projects" class="tab-content">
+            <div style="margin-bottom: var(--space-20);">
+                <button class="btn-primary" onclick="createNewProject()">+ Новый проект</button>
+            </div>
+            <div class="projects-list" id="projects-container"></div>
+        </div>
     </div>
 
+    <!-- ========== МОДАЛЬНОЕ ОКНО РАСТЕНИЯ ========== -->
     <div class="modal" id="plant-modal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal()">&times;</button>
@@ -1001,6 +706,11 @@
                 <p id="modal-scientific" style="margin: 0; font-style: italic; color: var(--color-text-light);"></p>
             </div>
             <div class="modal-body">
+                <div class="modal-actions">
+                    <button class="btn-primary" onclick="toggleFavorite(currentPlant.id)"><span id="fav-btn-text">❤️ В избранное</span></button>
+                    <button class="btn-secondary" onclick="showProjectSelector()">📋 Добавить в проект</button>
+                </div>
+
                 <div class="detail-section">
                     <h3>Основные характеристики</h3>
                     <div id="modal-characteristics"></div>
@@ -1031,6 +741,17 @@
                     <div id="modal-companions"></div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- ========== МОДАЛЬНОЕ ОКНО ВЫБОРА ПРОЕКТА ========== -->
+    <div class="modal" id="project-selector-modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <button class="modal-close" onclick="closeProjectSelector()">&times;</button>
+            <div class="modal-header">
+                <h2 style="margin: 0;">Выберите проект</h2>
+            </div>
+            <div class="modal-body" id="project-selector-list"></div>
         </div>
     </div>
 
@@ -1216,6 +937,37 @@
         ];
 
         let filteredPlants = [...plantsDatabase];
+        let currentPlant = null;
+
+        function loadData() {
+            const saved = localStorage.getItem('plantAppData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                window.favorites = data.favorites || [];
+                window.projects = data.projects || [];
+            } else {
+                window.favorites = [];
+                window.projects = [];
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('plantAppData', JSON.stringify({
+                favorites: window.favorites,
+                projects: window.projects
+            }));
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tab).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tab === 'favorites') renderFavorites();
+            if (tab === 'projects') renderProjects();
+        }
 
         function filterPlants() {
             const zone = document.getElementById('zone').value;
@@ -1226,37 +978,22 @@
 
             filteredPlants = plantsDatabase.filter(plant => {
                 let matches = true;
-
                 if (zone && plant.zone !== zone) matches = false;
                 if (soil && !plant.soil.includes(soil)) matches = false;
                 if (light && plant.light !== light) matches = false;
-
-                if (matches && purpose) {
-                    if (!plant.purpose.includes(purpose)) matches = false;
-                }
-
+                if (matches && purpose && !plant.purpose.includes(purpose)) matches = false;
                 return matches;
             });
 
-            // Sorting
             if (sort === 'name') {
                 filteredPlants.sort((a, b) => a.nameRU.localeCompare(b.nameRU, 'ru'));
             } else if (sort === 'height') {
-                filteredPlants.sort((a, b) => {
-                    const heightOrder = { 'низкие (до 1 м)': 1, 'средние (1-2,5 м)': 2, 'высокие (более 2,5 м)': 3 };
-                    return heightOrder[a.height] - heightOrder[b.height];
-                });
+                const heightOrder = { 'низкие (до 1 м)': 1, 'средние (1-2,5 м)': 2, 'высокие (более 2,5 м)': 3 };
+                filteredPlants.sort((a, b) => heightOrder[a.height] - heightOrder[b.height]);
             } else {
-                // Sort by relevance (purpose match increases relevance)
                 filteredPlants.sort((a, b) => {
-                    let relevanceA = a.relevance;
-                    let relevanceB = b.relevance;
-
-                    if (purpose) {
-                        if (a.purpose.includes(purpose)) relevanceA += 10;
-                        if (b.purpose.includes(purpose)) relevanceB += 10;
-                    }
-
+                    let relevanceA = a.relevance + (purpose && a.purpose.includes(purpose) ? 10 : 0);
+                    let relevanceB = b.relevance + (purpose && b.purpose.includes(purpose) ? 10 : 0);
                     return relevanceB - relevanceA;
                 });
             }
@@ -1270,30 +1007,19 @@
             container.innerHTML = '';
 
             if (filteredPlants.length === 0) {
-                container.innerHTML = `
-                    <div style="grid-column: 1/-1;">
-                        <div class="empty-state">
-                            <div class="empty-state-icon">🔍</div>
-                            <p>По выбранным критериям растений не найдено. Попробуйте изменить фильтры.</p>
-                        </div>
-                    </div>
-                `;
+                container.innerHTML = `<div style="grid-column: 1/-1;"><div class="empty-state"><div class="empty-state-icon">🔍</div><p>По выбранным критериям растений не найдено. Попробуйте изменить фильтры.</p></div></div>`;
                 return;
             }
 
             filteredPlants.forEach(plant => {
+                const isFavorite = window.favorites.includes(plant.id);
                 const card = document.createElement('div');
                 card.className = 'plant-card';
-                card.onclick = () => openModal(plant);
-
-                const relevanceDisplay = plant.purpose.length > 0 ? `
-                    <div class="relevance-badge">📌 Релевантно</div>
-                ` : '';
-
                 card.innerHTML = `
                     <div class="plant-image">
                         <div class="plant-image-placeholder">${plant.images[0]}</div>
-                        ${relevanceDisplay}
+                        ${plant.purpose.length > 0 ? '<div class="relevance-badge">📌 Релевантно</div>' : ''}
+                        <button class="favorite-btn" onclick="toggleFavorite(${plant.id}, event)">${isFavorite ? '❤️' : '🤍'}</button>
                     </div>
                     <div class="plant-content">
                         <h3 class="plant-name">${plant.nameRU}</h3>
@@ -1303,82 +1029,182 @@
                             <span class="meta-tag">${plant.height}</span>
                         </div>
                         <p class="plant-description">${plant.description.substring(0, 100)}...</p>
-                        <button class="plant-button">Подробнее</button>
+                        <button class="plant-button" onclick="openModal(${plant.id})">Подробнее</button>
                     </div>
                 `;
-
                 container.appendChild(card);
             });
         }
 
-        function openModal(plant) {
-            const modal = document.getElementById('plant-modal');
+        function renderFavorites() {
+            const container = document.getElementById('favorites-container');
+            if (window.favorites.length === 0) {
+                container.innerHTML = `<div style="grid-column: 1/-1;"><div class="empty-state"><div class="empty-state-icon">💔</div><p>Избранное пусто. Добавьте понравившиеся растения!</p></div></div>`;
+                return;
+            }
 
-            document.getElementById('modal-title').textContent = plant.nameRU;
-            document.getElementById('modal-scientific').textContent = plant.nameLAT;
+            const favPlants = plantsDatabase.filter(p => window.favorites.includes(p.id));
+            container.innerHTML = '';
 
-            // Gallery
-            const gallery = document.getElementById('modal-gallery');
-            gallery.innerHTML = plant.images.map(img => `
-                <div class="modal-gallery-item">${img}</div>
-            `).join('');
+            favPlants.forEach(plant => {
+                const card = document.createElement('div');
+                card.className = 'plant-card';
+                card.innerHTML = `
+                    <div class="plant-image">
+                        <div class="plant-image-placeholder">${plant.images[0]}</div>
+                        <button class="favorite-btn" onclick="toggleFavorite(${plant.id}, event)">❤️</button>
+                    </div>
+                    <div class="plant-content">
+                        <h3 class="plant-name">${plant.nameRU}</h3>
+                        <p class="plant-scientific">${plant.nameLAT}</p>
+                        <div class="plant-meta">
+                            <span class="meta-tag">${plant.type}</span>
+                            <span class="meta-tag">${plant.height}</span>
+                        </div>
+                        <p class="plant-description">${plant.description.substring(0, 100)}...</p>
+                        <button class="plant-button" onclick="openModal(${plant.id})">Подробнее</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
 
-            // Characteristics
-            const characteristics = document.getElementById('modal-characteristics');
-            characteristics.innerHTML = `
-                <div class="detail-row"><strong>Тип растения:</strong><span>${plant.type}</span></div>
-                <div class="detail-row"><strong>Листва:</strong><span>${plant.foliage}</span></div>
-                <div class="detail-row"><strong>Высота:</strong><span>${plant.height}</span></div>
+        function renderProjects() {
+            const container = document.getElementById('projects-container');
+            if (window.projects.length === 0) {
+                container.innerHTML = `<div style="grid-column: 1/-1;"><div class="empty-state"><div class="empty-state-icon">📋</div><p>Проектов пока нет. Создайте первый проект!</p></div></div>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            window.projects.forEach((project, idx) => {
+                const card = document.createElement('div');
+                card.className = 'project-card';
+                card.innerHTML = `
+                    <h3 class="project-name">${project.name}</h3>
+                    <p class="project-count">Растений: ${project.plants.length}</p>
+                    <div class="project-actions">
+                        <button class="btn-primary" onclick="viewProject(${idx})">Открыть</button>
+                        <button class="btn-secondary" onclick="deleteProject(${idx})">Удалить</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function createNewProject() {
+            const name = prompt('Введите название проекта:');
+            if (name) {
+                window.projects.push({ name, plants: [] });
+                saveData();
+                renderProjects();
+            }
+        }
+
+        function viewProject(idx) {
+            alert(`Проект: "${window.projects[idx].name}"\nРастений: ${window.projects[idx].plants.length}\n\n${window.projects[idx].plants.length > 0 ? window.projects[idx].plants.map(id => plantsDatabase.find(p => p.id === id)?.nameRU).join('\n') : 'Растений нет'}`);
+        }
+
+        function deleteProject(idx) {
+            if (confirm('Удалить проект?')) {
+                window.projects.splice(idx, 1);
+                saveData();
+                renderProjects();
+            }
+        }
+
+        function toggleFavorite(plantId, event) {
+            if (event) event.stopPropagation();
+            const idx = window.favorites.indexOf(plantId);
+            if (idx > -1) {
+                window.favorites.splice(idx, 1);
+            } else {
+                window.favorites.push(plantId);
+            }
+            saveData();
+            
+            if (currentPlant?.id === plantId) {
+                document.getElementById('fav-btn-text').textContent = idx > -1 ? '❤️ В избранное' : '❌ Из избранного';
+            }
+            
+            renderPlants();
+        }
+
+        function openModal(plantId) {
+            currentPlant = plantsDatabase.find(p => p.id === plantId);
+            const isFav = window.favorites.includes(plantId);
+            
+            document.getElementById('modal-title').textContent = currentPlant.nameRU;
+            document.getElementById('modal-scientific').textContent = currentPlant.nameLAT;
+            document.getElementById('fav-btn-text').textContent = isFav ? '❌ Из избранного' : '❤️ В избранное';
+            
+            document.getElementById('modal-gallery').innerHTML = currentPlant.images.map(img => `<div class="modal-gallery-item">${img}</div>`).join('');
+            
+            document.getElementById('modal-characteristics').innerHTML = `
+                <div class="detail-row"><strong>Тип:</strong><span>${currentPlant.type}</span></div>
+                <div class="detail-row"><strong>Листва:</strong><span>${currentPlant.foliage}</span></div>
+                <div class="detail-row"><strong>Высота:</strong><span>${currentPlant.height}</span></div>
             `;
-
-            // Preferences
-            const preferences = document.getElementById('modal-preferences');
-            preferences.innerHTML = `
-                <div class="detail-row"><strong>Климатическая зона:</strong><span>${plant.zone}</span></div>
-                <div class="detail-row"><strong>Почва:</strong><span>${plant.soil.join(', ')}</span></div>
-                <div class="detail-row"><strong>Освещение:</strong><span>${plant.light}</span></div>
+            
+            document.getElementById('modal-preferences').innerHTML = `
+                <div class="detail-row"><strong>Зона:</strong><span>${currentPlant.zone}</span></div>
+                <div class="detail-row"><strong>Почва:</strong><span>${currentPlant.soil.join(', ')}</span></div>
+                <div class="detail-row"><strong>Освещение:</strong><span>${currentPlant.light}</span></div>
             `;
-
-            // Description
-            document.getElementById('modal-description').textContent = plant.description;
-
-            // Care
-            const careSection = document.getElementById('modal-care');
-            careSection.innerHTML = `
-                <div class="care-section">
-                    <h4>Полив</h4>
-                    <p>${plant.watering}</p>
-                </div>
-                <div class="care-section">
-                    <h4>Подкормка</h4>
-                    <p>${plant.feeding}</p>
-                </div>
-                <div class="care-section">
-                    <h4>Обрезка</h4>
-                    <p>${plant.pruning}</p>
-                </div>
+            
+            document.getElementById('modal-description').textContent = currentPlant.description;
+            document.getElementById('modal-care').innerHTML = `
+                <div class="care-section"><h4>Полив</h4><p>${currentPlant.watering}</p></div>
+                <div class="care-section"><h4>Подкормка</h4><p>${currentPlant.feeding}</p></div>
+                <div class="care-section"><h4>Обрезка</h4><p>${currentPlant.pruning}</p></div>
             `;
-
-            // Seasonal
-            const seasonal = document.getElementById('modal-seasonal');
-            seasonal.innerHTML = `
-                <div class="detail-row"><strong>Посадка:</strong><span>${plant.plantingPeriod}</span></div>
-                <div class="detail-row"><strong>Цветение/Сбор:</strong><span>${plant.floweringPeriod}</span></div>
+            
+            document.getElementById('modal-seasonal').innerHTML = `
+                <div class="detail-row"><strong>Посадка:</strong><span>${currentPlant.plantingPeriod}</span></div>
+                <div class="detail-row"><strong>Цветение:</strong><span>${currentPlant.floweringPeriod}</span></div>
             `;
-
-            // Companions
-            const companions = document.getElementById('modal-companions');
-            companions.innerHTML = `
-                <div class="detail-row"><strong>Растения-компаньоны:</strong><span>${plant.companions.join(', ')}</span></div>
-                <div class="detail-row"><strong>Аллелопатия:</strong><span>${plant.allelopathy}</span></div>
+            
+            document.getElementById('modal-companions').innerHTML = `
+                <div class="detail-row"><strong>Компаньоны:</strong><span>${currentPlant.companions.join(', ')}</span></div>
+                <div class="detail-row"><strong>Аллелопатия:</strong><span>${currentPlant.allelopathy}</span></div>
             `;
-
-            modal.classList.add('active');
+            
+            document.getElementById('plant-modal').classList.add('active');
         }
 
         function closeModal() {
-            const modal = document.getElementById('plant-modal');
-            modal.classList.remove('active');
+            document.getElementById('plant-modal').classList.remove('active');
+        }
+
+        function showProjectSelector() {
+            if (window.projects.length === 0) {
+                alert('Создайте проект сначала!');
+                return;
+            }
+            
+            const list = document.getElementById('project-selector-list');
+            list.innerHTML = window.projects.map((proj, idx) => `
+                <button class="btn-primary" style="width: 100%; margin-bottom: var(--space-8);" onclick="addToProject(${idx})">
+                    ${proj.name}
+                </button>
+            `).join('');
+            
+            document.getElementById('project-selector-modal').classList.add('active');
+        }
+
+        function addToProject(projIdx) {
+            if (!window.projects[projIdx].plants.includes(currentPlant.id)) {
+                window.projects[projIdx].plants.push(currentPlant.id);
+                saveData();
+                alert(`"${currentPlant.nameRU}" добавлено в проект "${window.projects[projIdx].name}"`);
+            } else {
+                alert('Это растение уже в проекте!');
+            }
+            closeProjectSelector();
+        }
+
+        function closeProjectSelector() {
+            document.getElementById('project-selector-modal').classList.remove('active');
         }
 
         function resetFilters() {
@@ -1397,45 +1223,17 @@
             document.getElementById('results-count').textContent = `Результаты: ${count} растени${count % 10 === 1 && count % 100 !== 11 ? 'е' : 'й'}`;
         }
 
-        // Initial render
+        // Initialize
+        loadData();
         renderPlants();
         updateResultsCount();
 
-        // Close modal on background click
         document.getElementById('plant-modal').addEventListener('click', function(e) {
             if (e.target === this) closeModal();
         });
 
-        // Mobile optimizations
-        document.addEventListener('DOMContentLoaded', function() {
-            // Prevent double-tap zoom
-            let lastTouchEnd = 0;
-            document.addEventListener('touchend', function(event) {
-                const now = Date.now();
-                if (now - lastTouchEnd <= 300) {
-                    event.preventDefault();
-                }
-                lastTouchEnd = now;
-            }, false);
-
-            // Optimize for iOS
-            if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-                document.body.style.WebkitUserSelectAll = 'none';
-            }
-        });
-
-        // Add PWA support
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('data:text/javascript,console.log("SW enabled")');
-            });
-        }
-
-        // Handle orientation changes
-        window.addEventListener('orientationchange', function() {
-            setTimeout(() => {
-                window.scrollTo(0, 0);
-            }, 100);
+        document.getElementById('project-selector-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeProjectSelector();
         });
     </script>
 </body>
