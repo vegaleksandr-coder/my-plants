@@ -577,6 +577,9 @@
             animation: fadeIn var(--duration-fast) var(--ease);
         }
 
+            z-index: 2000;
+        }
+
         .modal.active {
             display: flex;
             align-items: center;
@@ -1146,6 +1149,11 @@
             </div>
             <div class="confirm-body">
                 <p id="confirm-message" style="margin: 0; font-size: 16px;"></p>
+            color: var(--color-text);
+            text-align: center;
+            line-height: 1.5;
+        }</style>
+        <style>
             </div>
             <div class="confirm-actions">
                 <button class="btn-secondary" onclick="closeConfirmDialog()">Отмена</button>
