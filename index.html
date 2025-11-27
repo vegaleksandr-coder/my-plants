@@ -571,6 +571,50 @@
             font-size: 12px;
         }
 
+        .project-plants-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: var(--space-16);
+        }
+
+        .project-plant-item {
+            padding: var(--space-12);
+            border-bottom: 1px solid var(--color-border);
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .project-plant-item:last-child {
+            border-bottom: none;
+        }
+
+        .project-plant-name {
+            font-weight: 500;
+            color: var(--color-text);
+        }
+
+        .project-plant-type {
+            font-size: 12px;
+            color: var(--color-text-light);
+        }
+
+        .remove-plant-btn {
+            background: var(--color-accent);
+            color: white;
+            border: none;
+            padding: var(--space-4) var(--space-8);
+            border-radius: var(--radius-base);
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color var(--duration-normal);
+        }
+
+        .remove-plant-btn:hover {
+            background-color: #d67043;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: var(--space-12);
@@ -752,6 +796,20 @@
                 <h2 style="margin: 0;">Выберите проект</h2>
             </div>
             <div class="modal-body" id="project-selector-list"></div>
+        </div>
+    </div>
+
+    <!-- ========== МОДАЛЬНОЕ ОКНО ПРОСМОТРА ПРОЕКТА ========== -->
+    <div class="modal" id="view-project-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeViewProject()">&times;</button>
+            <div class="modal-header">
+                <h2 id="view-project-title" style="margin: 0;"></h2>
+            </div>
+            <div class="modal-body">
+                <div class="project-plants-list" id="view-project-plants"></div>
+                <button class="btn-secondary" style="width: 100%;" onclick="closeViewProject()">Закрыть</button>
+            </div>
         </div>
     </div>
 
@@ -938,6 +996,7 @@
 
         let filteredPlants = [...plantsDatabase];
         let currentPlant = null;
+        let currentViewProjectIdx = null;
 
         function loadData() {
             const saved = localStorage.getItem('plantAppData');
@@ -1102,7 +1161,48 @@
         }
 
         function viewProject(idx) {
-            alert(`Проект: "${window.projects[idx].name}"\nРастений: ${window.projects[idx].plants.length}\n\n${window.projects[idx].plants.length > 0 ? window.projects[idx].plants.map(id => plantsDatabase.find(p => p.id === id)?.nameRU).join('\n') : 'Растений нет'}`);
+            currentViewProjectIdx = idx;
+            const project = window.projects[idx];
+            
+            document.getElementById('view-project-title').textContent = project.name;
+            
+            const plantsList = document.getElementById('view-project-plants');
+            if (project.plants.length === 0) {
+                plantsList.innerHTML = '<div class="empty-state"><p>Растений нет</p></div>';
+                return;
+            }
+            
+            plantsList.innerHTML = '';
+            project.plants.forEach((plantId, plantIdx) => {
+                const plant = plantsDatabase.find(p => p.id === plantId);
+                if (plant) {
+                    const item = document.createElement('div');
+                    item.className = 'project-plant-item';
+                    item.innerHTML = `
+                        <div>
+                            <div class="project-plant-name">${plant.nameRU}</div>
+                            <div class="project-plant-type">${plant.type}</div>
+                        </div>
+                        <button class="remove-plant-btn" onclick="removeFromProject(${idx}, ${plantIdx})">Удалить</button>
+                    `;
+                    plantsList.appendChild(item);
+                }
+            });
+            
+            document.getElementById('view-project-modal').classList.add('active');
+        }
+
+        function removeFromProject(projIdx, plantIdx) {
+            if (confirm('Удалить растение из проекта?')) {
+                window.projects[projIdx].plants.splice(plantIdx, 1);
+                saveData();
+                viewProject(projIdx);
+                renderProjects();
+            }
+        }
+
+        function closeViewProject() {
+            document.getElementById('view-project-modal').classList.remove('active');
         }
 
         function deleteProject(idx) {
@@ -1234,6 +1334,10 @@
 
         document.getElementById('project-selector-modal').addEventListener('click', function(e) {
             if (e.target === this) closeProjectSelector();
+        });
+
+        document.getElementById('view-project-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeViewProject();
         });
     </script>
 </body>
